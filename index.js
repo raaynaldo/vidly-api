@@ -26,8 +26,6 @@ app.get('/api/genres/:id', (req, res) => {
 
 app.post('/api/genres', (req, res) => {
   // check if paramater is valid
-  console.log(req.body);
-  console.log(req.body.title);
   const { error } = validateCourse(req.body);
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -42,6 +40,23 @@ app.post('/api/genres', (req, res) => {
 
   // return the genre
   return res.send(genre);
+});
+
+app.put('/api/genres/:id', (req, res) => {
+  const id = req.params.id;
+  const genre = genres.find((genre) => genre.id === +id);
+  if (!genre) {
+    return res.status(400).send('The genre with given ID was not found');
+  }
+
+  const { error } = validateCourse(req.body);
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+
+  genre.title = req.body.title;
+
+  res.send(genre);
 });
 
 const validateCourse = (course) => {
